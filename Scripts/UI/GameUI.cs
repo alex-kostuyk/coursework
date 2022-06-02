@@ -1,9 +1,8 @@
 
 using UnityEngine;
 using UnityEngine.UI;
-using UnityEngine.SceneManagement;
 using System;
-public class GameUI : MonoBehaviour
+public class GameUI : UI
 {
     [SerializeField]
     private Slider _strenght_bar;
@@ -52,10 +51,6 @@ public class GameUI : MonoBehaviour
     {
         _move_icon.SetActive(State);
     }
-    public void Restart()
-    {
-        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
-    }
     public void Pause(bool State)
     {
         if (!_game_end)
@@ -64,11 +59,6 @@ public class GameUI : MonoBehaviour
             _pause_menu.SetActive(State);
             _top_hud.SetActive(!State);
         }
-    }
-   
-    public void Quit()
-    {
-        Application.Quit();
     }
     public void ActivateWinScreen(Turn Winner)
     {

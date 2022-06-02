@@ -15,14 +15,17 @@ public  class UserInput : MonoBehaviour
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Escape))
+        if (Time.timeScale != 0)
         {
-            _game_UI.Pause(true);
+            if (Input.GetKeyDown(KeyCode.Escape))
+            {
+                _game_UI.Pause(true);
+            }
+            if (Input.GetKeyDown(KeyCode.Space))
+            {
+                _camera_switch_mod.SwitchMod();
+            }
         }
-         if (Input.GetKeyDown(KeyCode.Space))
-        {
-            _camera_switch_mod.SwitchMod();
-        } 
        
     }
 }

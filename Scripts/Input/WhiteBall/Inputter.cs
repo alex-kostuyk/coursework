@@ -18,5 +18,10 @@ public class Inputter : MonoBehaviour
             Input.MoveBallAllowed();
         }
     }
-   
+    public void SetActiveInput(bool State)
+    {
+        gameObject.SetActive(State);
+
+    }
+
 }

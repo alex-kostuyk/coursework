@@ -18,23 +18,27 @@ public class PlayerInput :MonoBehaviour, IInput
     private IMovement _i_movement;
     protected RaycastHit _hit;
 
-
     private void Start()
     {
-        _trajectory_projection = FindObjectOfType<TrajectoryProjection>();
         _rotate = FindObjectOfType<Rotate>();
         _move = FindObjectOfType<Move>();
         _cue = FindObjectOfType<Cue>();
         _push = FindObjectOfType<Push>();
         _game_UI = FindObjectOfType<GameUI>();
-        _movement= gameObject.AddComponent(typeof(Movement)) as Movement;
+        _trajectory_projection = FindObjectOfType<TrajectoryProjection>();
+        _movement = gameObject.AddComponent(typeof(Movement)) as Movement;
 
 
     }
-
+   
+    public void SetActiveInput(bool state)
+    {
+        gameObject.SetActive(state);
+        _trajectory_projection.gameObject.SetActive(state);
+    }
     private void Update()
     {
-      _trajectory_projection.DrawLine(true);
+        _trajectory_projection.DrawLine(true);
         if (Input.GetMouseButtonDown(0))
         {
             _rotate.ResetXZAngle();
@@ -79,7 +83,6 @@ public class PlayerInput :MonoBehaviour, IInput
                 _move_ball = false;
                 _move.SnapZAxis(false);
                 _game_UI.MoveIconIsActive(false);
-               
                 SetActiveInput(false);
             }
         }
@@ -101,11 +104,6 @@ public class PlayerInput :MonoBehaviour, IInput
         _game_UI.MoveIconIsActive(true);
     }
 
-    public void SetActiveInput(bool State)
-    {
-        gameObject.SetActive( State);
-        _trajectory_projection.gameObject.SetActive(State);
-    }
 
     public bool CheckMouseOnBall()
     {
@@ -134,7 +132,7 @@ public class PlayerInput :MonoBehaviour, IInput
                 _hit = hit;
                 _movement.ToPoint(_i_movement, hit);
             }
-            yield return new WaitForSeconds(Time.deltaTime);
+            yield return null;
 
         }
     }

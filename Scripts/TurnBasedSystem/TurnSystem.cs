@@ -31,7 +31,8 @@ public class TurnSystem : MonoBehaviour
         _gameUI = FindObjectOfType<GameUI>();
         _gameUI.SetTurnText(_turn);
         _cue = FindObjectOfType<Cue>();
-        _input = gameObject.AddComponent(typeof(Inputter))as Inputter; 
+        _input = gameObject.AddComponent(typeof(Inputter))as Inputter;
+        _ai_input.gameObject.SetActive(false);
     }
 
     public Turn GetWhoseTurn()
@@ -66,12 +67,14 @@ public class TurnSystem : MonoBehaviour
 
             return _player_input;
     }
+   
     public void RoundEnd()
     {
         if (_game_activity.GetWhiteBallScored()|| !_game_activity.RightBallPushedCheck(_turn))
         {
             _move.ResetPosition();
-            _input.AllowMove(_get_current_input_type(_turn));
+            if(_turn==Turn.AI||!EnemyIsAI)
+            _player_input.MoveBallAllowed();
         }
         if (_game_activity.GetBlackBallScored())
         {

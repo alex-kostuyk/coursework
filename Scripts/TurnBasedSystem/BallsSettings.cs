@@ -42,7 +42,6 @@ public class BallsSettings : MonoBehaviour
     public void CheckBallsStop()
     {
         StartCoroutine(_coroutine());
-
     }
     private IEnumerator _coroutine()
     {
@@ -56,9 +55,7 @@ public class BallsSettings : MonoBehaviour
                 if (_balls[i].velocity.magnitude > _magnitude_balls_stop)
                 {
                     stop = false;
-
                 }
-
             }
             yield return new WaitForSeconds(_freaquency_balls_stop_check);
         }

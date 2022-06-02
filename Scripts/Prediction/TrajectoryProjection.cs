@@ -61,24 +61,24 @@ public class TrajectoryProjection : MonoBehaviour
 				points[2]= points[1] - (_direction.normalized * _max_bounce_line_length);
 
 				_ball_type = _balls.GetBallType();
-				_direction = points[2] - points[1];
 				
-				ray = new Ray(points[2], -_direction.normalized * _max_forward_line_length);
-				if (Physics.SphereCast(ray.origin,_sphere_cast_radius, ray.direction, out hit, _max_forward_line_length))
+				
+				ray = new Ray(points[2], -(_direction.normalized * _max_forward_line_length));
+				if (Physics.SphereCast(ray.origin,_sphere_cast_radius, ray.direction, out hit, _max_forward_line_length, ~_ignore_me))
 				{
 					if (hit.collider.GetComponent<Holes>() != null)
 					{
 						
 						_hit_hole = true;
 					}
-				   
+					
 				}
 				
 			}
             else 
 			{
 				points[2] = points[1];
-				
+
 			}
 
 

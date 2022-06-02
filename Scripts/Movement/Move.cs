@@ -12,17 +12,13 @@ public class Move : MonoBehaviour,IMovement
     private bool _snap_z=true;
     private Vector3 _start_position;
    
-
-
-private void Start()
-{
+    private void Start()
+    {
     _rigidbody = GetComponent<Rigidbody>();
     _start_z_position = transform.position.z;
     _start_position = transform.position;
        
-}
-
-
+    }
    public void SnapZAxis(bool State)
     {
         _snap_z = State;

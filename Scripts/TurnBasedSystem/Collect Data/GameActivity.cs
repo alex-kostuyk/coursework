@@ -37,20 +37,14 @@ public class GameActivity : MonoBehaviour
 
         }
     }
-    public void BallScored(BallType ballType)
-    {
-        
-    }
     public void ScoredFullBall()
     {
-
         _total_scored_full_balls++;
         _round_scored_full_balls++;
         _gameUI.SetScoresText();
     }
     public void ScoredStripBall()
     {
-
         _total_scored_strip_balls++;
         _round_scored_strip_balls++;
         _gameUI.SetScoresText();
@@ -61,6 +55,7 @@ public class GameActivity : MonoBehaviour
     }
     public void ScoredBlackBall()
     {
+         
         _scored_black_ball = true;
     }
     public void FullBallPushed()
@@ -116,11 +111,8 @@ public class GameActivity : MonoBehaviour
     }
     public int GetScoredNumber(Turn _turn)
     {
-        BallType _player_type = _player_1_type;
-        if (_turn == Turn.Player2)
-            _player_type = _player_2_type;
 
-        if (_player_type == BallType.Full)
+        if (GetPlayerType(_turn) == BallType.Full)
             return _total_scored_full_balls;
         else
             return _total_scored_strip_balls;
@@ -128,9 +120,9 @@ public class GameActivity : MonoBehaviour
     }
     public BallType GetPlayerType(Turn _turn)
     {
-        BallType _player_type = _player_1_type;
-        if (_turn == Turn.Player2)
-            _player_type = _player_2_type;
+        BallType _player_type = _player_2_type;
+        if (_turn == Turn.Player1)
+            _player_type = _player_1_type;
 
         return _player_type;
 

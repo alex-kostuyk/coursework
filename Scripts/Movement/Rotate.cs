@@ -23,10 +23,6 @@ public class Rotate : MonoBehaviour,IMovement
                 var rotation = Quaternion.LookRotation(lookPos);
                 _transform.rotation = Quaternion.Lerp(_transform.rotation, rotation, _speed * Time.deltaTime);
     }
-
-   
-
-
 }
 
 

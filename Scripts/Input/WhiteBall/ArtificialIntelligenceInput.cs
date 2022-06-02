@@ -1,8 +1,7 @@
-using System.Collections;
-using System.Collections.Generic;
+
 using UnityEngine;
 
-public class ArtificialIntelligenceInput : MonoBehaviour, IInput
+public class ArtificialIntelligenceInput :MonoBehaviour, IInput
 {
     [SerializeField]
     private Push _push;
@@ -14,97 +13,93 @@ public class ArtificialIntelligenceInput : MonoBehaviour, IInput
     private GameUI _game_UI;
     [SerializeField]
     private Cue _cue;
-    private bool _move_ball;
     private Quaternion _hit_angle;
-    private Vector3 _move_to_point;
-    private float _push_strenght;
     [SerializeField]
     private Transform _white_ball,_picking;
+    private float _min_strength=4, _max_strength=12;
     private void Start()
     {
         _game_UI = FindObjectOfType<GameUI>();
         _cue = FindObjectOfType<Cue>();
+        gameObject.SetActive(false);
     }
-    private void OnEnable()
+   
+    public  void SetActiveInput(bool State)
     {
-        _round_initialize();
-        _choose_move_point();
-        _choose_rotation_angle();
-        _choose_push_strenght();
-        _action();
+       if(State)
+        {
+            gameObject.SetActive(true);
+            _trajectory_projection.gameObject.SetActive(true);
+            _cue.SetActive(true);
+            _round_initialize();
+            _choose_rotation_angle();
+            _choose_push_strenght(); 
+            Invoke("_action", 2.5f);
+        }
     }
-    public void SetActiveInput(bool State)
-    {
-        gameObject.SetActive(State);
-
-    }
+ 
     private void _round_initialize()
     {
-        _move_to_point = _white_ball.position;
+       
         _picking.position = _white_ball.position;
         _picking.rotation = Quaternion.identity;
         _hit_angle = Quaternion.identity;
-        _push_strenght = 0;
+      
     }
     public void MoveBallAllowed()
     {
-        _move_ball = true;
-        
-    }
-    private void _choose_move_point()
-    {
-        if(_move_ball)
-        {
-            //вибыр рандомноъ точки
-          
-        }
-        else
-        {
-            _move_to_point = _white_ball.position;
-        }
       
     }
     private void _choose_rotation_angle()
     {
-        for(float i=0;i<=360;i+=0.3f)
-        {
+        _picking.position = _white_ball.position;
+          _picking.rotation = Quaternion.identity;
+        bool _look_at_correct_ball;
+        BallType _trajectory_hitting_type;
+        for (float i=0;i<=360;i+=0.3f)
+        {   
+
             _picking.rotation = Quaternion.Euler(0, i, 0);
-            if(_trajectory_projection.CheckTrajectoryHittingHole(_picking)&&(_trajectory_projection.GetTrajectoryHittingBallType()==_game_activity.GetPlayerType(Turn.Player2)|| _game_activity.GetPlayerType(Turn.Player2)==BallType.Null))
+            _trajectory_hitting_type = _trajectory_projection.GetTrajectoryHittingBallType();
+            _look_at_correct_ball = _trajectory_hitting_type == _game_activity.GetPlayerType(Turn.Player2)||_game_activity.GetScoredNumber(Turn.Player2)>=7&& _trajectory_hitting_type == BallType.Black|| _game_activity.GetPlayerType(Turn.Player2)==BallType.Null;
+            if (_look_at_correct_ball)
             {
                 _hit_angle = _picking.rotation;
-                Debug.Log("best");
             }
-           else if(_trajectory_projection.GetTrajectoryHittingBallType() == _game_activity.GetPlayerType(Turn.Player2))
+            if (_trajectory_projection.CheckTrajectoryHittingHole(_picking) && _look_at_correct_ball)
             {
                 _hit_angle = _picking.rotation;
-                Debug.Log("last");
-            }
+                break;
+            }  
         }
-        Debug.Log(_hit_angle.eulerAngles);
-      
+     
+        _white_ball.rotation = _hit_angle;
+        for(int i=0;i<5;i++)
+        _trajectory_projection.DrawLine(true);
+
+
     }
     private void _choose_push_strenght()
     {
-        _push.StrengthValue = Random.Range(_push.MinPushStrenght+5,_push.MaxPushStrenght);
+        _push.StrengthValue = Random.Range(_min_strength,_max_strength);
+        _game_UI.SetStrenghtBarValue(_push.StrengthValue);
+
     }
     private void _action()
     {
-        _white_ball.rotation = _hit_angle;
-        _game_UI.SetStrenghtBarValue(_push.StrengthValue);
-        _trajectory_projection.DrawLine(true);
-        Invoke("wait", 1);
-        
-
+        _trajectory_projection.gameObject.SetActive(false);
+        _push.Strike();
+        _cue.SetActive(false);
+        Invoke("wait", 2.5f);
+     
     }
     private void wait()
     {
-        _cue.SetActive(false);
-        _push.Strike();
-        _push.StrengthValue = 0; 
-        _game_UI.SetStrenghtBarValue(_push.StrengthValue);
+        _push.StrengthValue = _push.MinPushStrenght;
+        _game_UI.SetStrenghtBarValue(_push.MinPushStrenght);
         BallsSettings.Settings.CheckBallsStop();
-        _move_ball = false;
-        SetActiveInput(false);
+        gameObject.SetActive(false);
+
     }
-   
+
 }

@@ -6,11 +6,14 @@ public class CameraSwitchMod : MonoBehaviour
 {
     [SerializeField]
     private Transform []_statics_point;
-    private Transform _main_camera, _target_point;
+    [SerializeField]
+    private Transform _main_camera;
+    private Transform _target_point;
     [SerializeField]
     private float _smooth_speed = 10f;
     private IEnumerator change_position;
     private int _index;
+ 
     private int _point_index
     {
         get
@@ -29,7 +32,7 @@ public class CameraSwitchMod : MonoBehaviour
 
     private void Start()
     {
-        _main_camera = Camera.main.transform;
+        _main_camera.SetParent(null, true);
         _target_point = _statics_point[_point_index];
         change_position = _coroutine(_target_point);
         StartCoroutine(change_position);
@@ -59,7 +62,7 @@ public class CameraSwitchMod : MonoBehaviour
             {
                 yield break;
             }
-            yield return new WaitForSeconds(Time.deltaTime);
+            yield return null;
 
         }
     }
